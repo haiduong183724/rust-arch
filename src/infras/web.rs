@@ -16,7 +16,7 @@ pub async fn run() -> std::io::Result<()> {
         actix_web::App::new()
             .app_data(app_data.clone())
             .wrap(Logger::default())
-            // .wrap(from_fn(middlewares::auth_middleware::auth_middleware))
+            .wrap(from_fn(middlewares::auth_middleware::auth_middleware))
             .configure(user_routes::routes)
     })
     .bind(SERVER)
