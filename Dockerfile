@@ -1,39 +1,36 @@
-# Stage 1: Build the application
-FROM rust:latest as builder
+# Stage 1: Build Stage
+FROM rust:latest AS builder
 
-# Set the working directory
+# Cài đặt các thư viện cần thiết
+RUN apt-get update && apt-get install -y libpq-dev
+
+# Tạo thư mục làm việc
 WORKDIR /usr/src/app
 
-# Copy the Cargo.toml and Cargo.lock files
+# Sao chép các tập tin Cargo vào thư mục làm việc
 COPY Cargo.toml Cargo.lock ./
 
-# Create a dummy main.rs file and build dependencies
-RUN mkdir src && echo "fn main() {}" > src/main.rs
-RUN cargo build --release
-RUN rm -f target/release/deps/clean-arch*
-
-# Copy the source code
+# Sao chép mã nguồn vào thư mục làm việc
 COPY . .
 
-# Build the actual application
+# Build dự án ở chế độ release
 RUN cargo build --release
 
-# Stage 2: Create the runtime image
+# Stage 2: Final Stage
 FROM ubuntu:22.04
 
-# Install required libraries
-RUN apt-get update && apt-get install -y \
-    ca-certificates \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Cài đặt thư viện cần thiết cho runtime
+RUN apt-get update && apt-get install -y libpq-dev
 
-# Set the working directory
-WORKDIR /usr/local/bin
+# Tạo thư mục làm việc
+WORKDIR /usr/src/app
 
-# Copy the compiled binary from the builder stage
-COPY --from=builder /usr/src/app/target/release/clean-arch .
-
-# Command to run the binary
-CMD ["./clean-arch"]
-
+# Sao chép file nhị phân từ giai đoạn build
+COPY --from=builder /usr/src/app/target/release/clean-arch ./
+COPY --from=builder /usr/src/app/.env .env
+EXPOSE 9999
+# Chạy ứng dụng
 # Keep the container running
 CMD ["sleep", "infinity"]
+CMD ["./clean-arch"]
+

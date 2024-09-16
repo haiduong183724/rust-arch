@@ -49,3 +49,7 @@ pub async fn get_by_email(repo: web::Data<PgUserRepo>, path: Path<(String,)>) ->
         None => HttpResponse::NotFound().finish(),
     }
 }
+#[get("/greet")]
+pub async fn greet() -> impl Responder {
+    HttpResponse::Ok().body("Hello, world!")
+}

@@ -1,9 +1,10 @@
 use actix_web::{middleware::Logger, web, HttpServer};
+use actix_web::web::get;
 use actix_web_lab::middleware::from_fn;
 use log::info;
 
 use crate::present::{middlewares, routes::user_routes};
-
+use crate::present::handlers::user_handler::greet;
 use super::repo::user_repo::PgUserRepo;
 
 pub async fn run() -> std::io::Result<()> {
@@ -18,6 +19,7 @@ pub async fn run() -> std::io::Result<()> {
             .wrap(Logger::default())
             .wrap(from_fn(middlewares::auth_middleware::auth_middleware))
             .configure(user_routes::routes)
+            .service(greet)
     })
     .bind(SERVER)
     .unwrap()
