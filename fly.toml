@@ -3,6 +3,8 @@ app = "clean-arch"
 kill_signal = "SIGINT"
 kill_timeout = 5
 
+
+
 [env]
 LOG_LEVEL = "info"
 
@@ -14,10 +16,10 @@ allowed_public_ports = []
 auto_rollback = true
 
 [build]
-image = "rust:latest"
+dockerfile = "Dockerfile"
 
 [[services]]
-internal_port = 8080
+internal_port = 9000
 protocol = "tcp"
 
 [services.concurrency]
