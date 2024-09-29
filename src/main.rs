@@ -1,10 +1,10 @@
 use infras::web::run;
 
-mod app;
-mod domain;
+pub mod app;
+pub mod domain;
 mod errors;
 mod infras;
-mod present;
+pub mod present;
 mod schema;
 mod utils;
 
