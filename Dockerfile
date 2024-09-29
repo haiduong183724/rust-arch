@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y libpq-dev
 WORKDIR /usr/src/app
 
 # Sao chép file nhị phân từ giai đoạn build
-COPY --from=builder /usr/src/app/target/release/clean-arch ./
+COPY --from=builder /usr/src/app/target/release/clean_arch ./
 COPY --from=builder /usr/src/app/.env .env
 EXPOSE 9999
 # Chạy ứng dụng
